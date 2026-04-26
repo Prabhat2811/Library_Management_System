@@ -57,7 +57,7 @@ public class BookController {
 	//Fetch By Id
 	@GetMapping("/{id}")
 	public ResponseStructure<Book> getBookById(@PathVariable Integer id) {
-		ResponseStructure<Book> res=new ResponseStructure();
+		ResponseStructure<Book> res=new ResponseStructure<Book>();
 		
 		Optional<Book>opt= bookRepository.findById(id);
 		if(opt.isPresent()) {
