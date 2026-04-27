@@ -24,6 +24,7 @@ public class BookController {
 	
 	
 	//Insert a Record
+	//T save(T ref)
 	@PostMapping
 	public ResponseStructure<Book> saveBook(@RequestBody Book book) {
 		ResponseStructure<Book> res=new ResponseStructure<Book>();
@@ -48,10 +49,18 @@ public class BookController {
 	@GetMapping
 	public ResponseStructure<List<Book>> getAllBook() {
 		ResponseStructure<List<Book>> res=new ResponseStructure<List<Book>>();
+		List<Book> books=bookRepository.findAll();
+		if(!books.isEmpty()) {
 		res.setStatusCode(HttpStatus.FOUND.value());
 		res.setMessage("All Record Found");
-		res.setData(bookRepository.findAll());
+		res.setData(books);
 		return res;
+		}
+		else {
+			res.setStatusCode(HttpStatus.NOT_FOUND.value());
+			res.setMessage("No Record Found");
+			return res;
+		}
 	}
 	
 	//Fetch By Id
@@ -73,6 +82,8 @@ public class BookController {
 		}
 	}
 	
+	
+	//Update Book Record
 	@PutMapping
 	public ResponseStructure<Book> updateBook(@RequestBody Book book) {
 		
@@ -100,20 +111,21 @@ public class BookController {
 			return res;
 		}
 	}
-	@DeleteMapping("/{id}") 
-	public ResponseStructure<Optional<Book>> deleteBook(@PathVariable Integer id) {
-		ResponseStructure<Optional<Book>> res=new ResponseStructure<Optional<Book>>();
+	@DeleteMapping("/{id}")
+	public ResponseStructure<String> deleteBook(@PathVariable Integer id) {
+		ResponseStructure<String> res=new ResponseStructure<String>();
 		Optional<Book> opt=bookRepository.findById(id);
 		if(opt.isPresent()) {
-			res.setData(bookRepository.findById(id));
+			res.setData("Deleted");
 			res.setStatusCode(HttpStatus.OK.value());
-			res.setMessage("Record Deleted");
-			bookRepository.delete(res.getData().get());
+			res.setMessage("Book Record Deleted");
+			bookRepository.delete(opt.get());
 			return res;
 		}
 		else {
 			res.setStatusCode(HttpStatus.NOT_FOUND.value());
 			res.setMessage("Record Not Found As Id is Invalid");
+			res.setData("Failure");
 			return res;
 		}
 	}
