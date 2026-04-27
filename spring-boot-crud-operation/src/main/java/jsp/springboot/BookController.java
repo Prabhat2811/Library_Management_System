@@ -113,21 +113,19 @@ public class BookController {
 		}
 	}
 	@DeleteMapping("/{id}")
-	public ResponseEntity<ResponseStructure<String>> deleteBook(@PathVariable Integer id) {
+	public ResponseEntity<String> deleteBook(@PathVariable Integer id) {
 		ResponseStructure<String> res=new ResponseStructure<String>();
 		Optional<Book> opt=bookRepository.findById(id);
 		if(opt.isPresent()) {
 			res.setData("Deleted");
 			res.setStatusCode(HttpStatus.OK.value());
-			res.setMessage("Book Record Deleted");
 			bookRepository.delete(opt.get());
-			return new ResponseEntity<ResponseStructure<String>>(res, HttpStatus.OK);
+			return new ResponseEntity<String>("Book Record Deleted", HttpStatus.OK);
 		}
 		else {
 			res.setStatusCode(HttpStatus.NOT_FOUND.value());
-			res.setMessage("Record Not Found As Id is Invalid");
 			res.setData("Failure");
-			return new ResponseEntity<ResponseStructure<String>>(res, HttpStatus.NOT_FOUND);
+			return new ResponseEntity<String>("Record Not Found As Id is Invalid", HttpStatus.NOT_FOUND);
 		}
 	}
 }
