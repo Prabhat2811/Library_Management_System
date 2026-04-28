@@ -57,11 +57,8 @@ public class BookController {
 		res.setData(books);
 		return new ResponseEntity<ResponseStructure<List<Book>>>(res, HttpStatus.FOUND);
 		}
-		else {
-			res.setStatusCode(HttpStatus.NOT_FOUND.value());
-			res.setMessage("No Record Found");
-			return new ResponseEntity<ResponseStructure<List<Book>>>(res, HttpStatus.NOT_FOUND);
-		}
+		else 
+			throw new NoRecordAvailableException("No Book Record Available");
 	}
 	
 	//Fetch By Id
@@ -76,11 +73,9 @@ public class BookController {
 			res.setMessage("Book Record Found");
 			return new ResponseEntity<ResponseStructure<Book>>(res, HttpStatus.FOUND);
 		}
-		else {
-			res.setStatusCode(HttpStatus.NOT_FOUND.value());
-			res.setMessage("Book Record Not Found");
-			return new ResponseEntity<ResponseStructure<Book>>(res, HttpStatus.NOT_FOUND);
-		}
+		else 
+			throw new IdNotFoundException("Book Record With id "+id+" Does not Exist");
+			
 	}
 	
 	
@@ -91,10 +86,7 @@ public class BookController {
 		ResponseStructure<Book> res=new ResponseStructure<Book>();
 		//case-I
 		if(book.getId()==null) {
-			res.setData(book);
-			res.setStatusCode(HttpStatus.NOT_FOUND.value());
-			res.setMessage("Id must be passed to Update");
-			return new ResponseEntity<ResponseStructure<Book>>(res, HttpStatus.NOT_FOUND);
+			 throw new IdNotFoundException("Id Should Be present to Update a Existing Record.");
 		}
 		Optional<Book> opt=bookRepository.findById(book.getId());
 		
@@ -106,27 +98,22 @@ public class BookController {
 			return new ResponseEntity<ResponseStructure<Book>>(res, HttpStatus.OK);
 		}
 		//case-III
-		else {
-			res.setStatusCode(HttpStatus.NOT_FOUND.value());
-			res.setMessage("Id does not exist in Database");
-			return new ResponseEntity<ResponseStructure<Book>>(res, HttpStatus.NOT_FOUND);
-		}
+		else 
+			throw new IdNotFoundException("Book Record With id "+book.getId()+" Does not Exist");
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> deleteBook(@PathVariable Integer id) {
+	public ResponseEntity<ResponseStructure<String>> deleteBook(@PathVariable Integer id) {
 		ResponseStructure<String> res=new ResponseStructure<String>();
 		Optional<Book> opt=bookRepository.findById(id);
 		if(opt.isPresent()) {
 			res.setData("Deleted");
 			res.setStatusCode(HttpStatus.OK.value());
+			res.setMessage("Book Record Deleted");
 			bookRepository.delete(opt.get());
-			return new ResponseEntity<String>("Book Record Deleted", HttpStatus.OK);
+			return new ResponseEntity<ResponseStructure<String>>(res, HttpStatus.OK);
 		}
-		else {
-			res.setStatusCode(HttpStatus.NOT_FOUND.value());
-			res.setData("Failure");
-			return new ResponseEntity<String>("Record Not Found As Id is Invalid", HttpStatus.NOT_FOUND);
-		}
+		else 
+			throw new IdNotFoundException("Book Record With id "+id+" Does not Exist");
 	}
 }
