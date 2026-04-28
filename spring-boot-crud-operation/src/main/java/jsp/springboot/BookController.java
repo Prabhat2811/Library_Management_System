@@ -69,7 +69,7 @@ public class BookController {
 	public ResponseEntity<ResponseStructure<Book>> getBookById(@PathVariable Integer id) {
 		ResponseStructure<Book> res=new ResponseStructure<Book>();
 		
-		Optional<Book>opt= bookRepository.findById(id);
+		Optional<Book> opt= bookRepository.findById(id);
 		if(opt.isPresent()) {
 			res.setData(opt.get());
 			res.setStatusCode(HttpStatus.FOUND.value());
@@ -112,6 +112,7 @@ public class BookController {
 			return new ResponseEntity<ResponseStructure<Book>>(res, HttpStatus.NOT_FOUND);
 		}
 	}
+	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> deleteBook(@PathVariable Integer id) {
 		ResponseStructure<String> res=new ResponseStructure<String>();
