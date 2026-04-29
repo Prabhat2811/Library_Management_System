@@ -116,4 +116,109 @@ public class BookController {
 		else 
 			throw new IdNotFoundException("Book Record With id "+id+" Does not Exist");
 	}
+	
+	
+	//Fetch By Author
+	@GetMapping("/author/{author}")
+	public ResponseEntity<ResponseStructure<List<Book>>> getBookByAuthor(@PathVariable String author){
+		ResponseStructure<List<Book>> res=new ResponseStructure<List<Book>>();
+		List<Book> books=bookRepository.findByAuthor(author);
+		if(!books.isEmpty()) {
+			res.setData(books);
+			res.setMessage("Book Record with "+author+" Retrived");
+			res.setStatusCode(HttpStatus.OK.value());
+			return new ResponseEntity<ResponseStructure<List<Book>>>(res, HttpStatus.OK);
+		}
+		else
+			throw new NoRecordAvailableException("No Book Available with Author name "+author);
+	}
+	
+	
+	//Fetch By Author and Title
+	@GetMapping("/{author}/{title}")
+	public ResponseEntity<ResponseStructure<Book>> getBookByAuthorAndTitle(@PathVariable String author, @PathVariable String title){
+		ResponseStructure<Book> res=new ResponseStructure<Book>();
+		Optional<Book> opt=bookRepository.findByAuthorAndTitle(author, title);
+		if(opt.isPresent()) {
+			res.setData(opt.get());
+			res.setMessage("Book Record Found Successfully with Author "+author+" and Title "+title);
+			res.setStatusCode(HttpStatus.FOUND.value());
+			return new ResponseEntity<ResponseStructure<Book>>(res, HttpStatus.FOUND);
+		}
+		else
+			throw new NoRecordAvailableException("No Book Found with author "+author+" and Title "+title);
+		
+	}
+	
+	
+	//Fetch By Price Less Than
+	@GetMapping("/price/{price}")
+	public ResponseEntity<ResponseStructure<List<Book>>> getBookByPriceLessThan(@PathVariable double price){
+		ResponseStructure<List<Book>> res=new ResponseStructure<List<Book>>();
+		List<Book> books=bookRepository.findByPriceLessThan(price);
+		if(!books.isEmpty()) {
+			res.setStatusCode(HttpStatus.FOUND.value());
+			res.setMessage("Found "+books.size()+" Book Record Less Than "+price+"rs");
+			res.setData(books);
+			return new ResponseEntity<ResponseStructure<List<Book>>>(res, HttpStatus.FOUND);
+		}
+		else
+			throw new NoRecordAvailableException("No Book Available Less than "+price+"rs");
+	}
+	
+	@GetMapping("/range/{startRange}/{endRange}")
+	public ResponseEntity<ResponseStructure<List<Book>>> getBookBetweenPrice(@PathVariable double startRange, @PathVariable double endRange){
+		ResponseStructure<List<Book>> res=new ResponseStructure<List<Book>>();
+		List<Book> books=bookRepository.findByPriceBetween(startRange, endRange);
+		if(!books.isEmpty()) {
+			res.setStatusCode(HttpStatus.OK.value());
+			res.setMessage(books.size()+" Book Record Available between "+startRange+"~"+endRange);
+			res.setData(books);
+			return new ResponseEntity<ResponseStructure<List<Book>>>(res, HttpStatus.OK);
+		}
+		else
+			throw new NoRecordAvailableException("No Book Available Between "+startRange+"~"+endRange);
+	}
+	
+	@GetMapping("/available")
+	public ResponseEntity<ResponseStructure<List<Book>>> getBookAvailability(){
+		ResponseStructure<List<Book>> res=new ResponseStructure<List<Book>>();
+		List<Book> books=bookRepository.getBookByAvailability();
+		if(!books.isEmpty()) {
+			res.setStatusCode(HttpStatus.OK.value());
+			res.setMessage(books.size()+" Type Of Book Record are Available");
+			res.setData(books);
+			return new ResponseEntity<ResponseStructure<List<Book>>>(res,HttpStatus.OK);
+		}
+		else
+			throw new NoRecordAvailableException("No Book Record Available");
+	}
+	
+	@GetMapping("/year/{year}")
+	public ResponseEntity<ResponseStructure<List<Book>>> getBookByPublishedYear(@PathVariable Integer year){
+		ResponseStructure<List<Book>> res = new ResponseStructure<List<Book>>();
+		List<Book> books=bookRepository.getBookByPublishedYear(year);
+		if(!books.isEmpty()) {
+			res.setStatusCode(HttpStatus.FOUND.value());
+			res.setMessage(books.size()+" Book are Available which is Published in "+year);
+			res.setData(books);
+			return new ResponseEntity<ResponseStructure<List<Book>>>(res, HttpStatus.FOUND);
+		}
+		else
+			throw new NoRecordAvailableException("No Book is Available which is Published in "+year);
+	}
+	
+	@GetMapping("/genre/{genre}")
+	public ResponseEntity<ResponseStructure<List<Book>>> getBookByGenre(@PathVariable String genre){
+		ResponseStructure<List<Book>> res =new ResponseStructure<List<Book>>();
+		List<Book> books=bookRepository.getBookByGenre(genre);
+		if(!books.isEmpty()) {
+			res.setStatusCode(HttpStatus.FOUND.value());
+			res.setMessage(books.size()+" Book Available Based on "+genre+" genre");
+			res.setData(books);
+			return new ResponseEntity<ResponseStructure<List<Book>>>(res, HttpStatus.FOUND);
+		}
+		else
+			throw new NoRecordAvailableException("No Book Record Available Based on "+genre+" genre");
+	}
 }
