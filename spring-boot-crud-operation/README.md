@@ -10,14 +10,14 @@ The application runs using the **embedded/inbuilt Apache Tomcat Server** provide
 
 ## 🚀 Features
 
-* 🧾 Backend-only REST API project (no frontend/view pages)
-* 📮 Requests are tested and sent using Postman
-* 📖 Add, Update, Delete Book Records
-* 🔍 Search Books by ID and Fetch all Book record.
-* 📊 Book Inventory Tracking
-* 🌐 RESTful APIs for CRUD Operations
-* ⚡ Fast Database Access using Spring Data JPA
-* 🖥️ Runs on Embedded Apache Tomcat Server
+* 🧾 Backend-only REST API project (no frontend/view pages).
+* 📮 Requests are tested and sent using Postman.
+* 📖 Add, Update, Delete Book Records.
+* 🔍 Search Books by ID, Author, Genre, Availabilty, Author and Title,etc.
+* 📊 Book Inventory Tracking.
+* 🌐 RESTful APIs for CRUD Operations.
+* ⚡ Fast Database Access using Spring Data JPA.
+* 🖥️ Runs on Embedded Apache Tomcat Server.
 
 ---
 
