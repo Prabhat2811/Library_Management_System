@@ -1,4 +1,4 @@
-package jsp.springboot;
+package jsp.springboot.dto;
 
 public class ResponseStructure<T>{
 	private int statusCode;

@@ -1,4 +1,4 @@
-package jsp.springboot;
+package jsp.springboot.exception;
 
 public class IdNotFoundException extends RuntimeException{
 	
