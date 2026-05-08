@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -198,4 +201,46 @@ public class BookService {
 		else
 			throw new NoRecordAvailableException("No Record Available whose Genre is "+genre);
 	}
+	
+	//PAGINATION
+	public ResponseStructure<Page<Book>> getBookByPagination(int pageNumber, int pageSize){
+		ResponseStructure<Page<Book>> res=new ResponseStructure<>();
+		Page<Book> pages=bookRepository.findAll(PageRequest.of(pageNumber, pageSize));
+		if(!pages.isEmpty()) {
+			res.setStatusCode(HttpStatus.OK.value());
+			res.setMessage("Records Retrieved from DB in the form of pages.");
+			res.setData(pages);
+			return res;
+		}
+		else
+			throw new NoRecordAvailableException("No record available in the database.");
+	}
+	//SORTING
+	public ResponseStructure<List<Book>> getBookBySorting(String fieldName){
+		ResponseStructure<List<Book>> res=new ResponseStructure<>();
+		List<Book> books=bookRepository.findAll(Sort.by(fieldName).ascending());
+		if(!books.isEmpty()) {
+			res.setStatusCode(HttpStatus.OK.value());
+			res.setMessage("Book Record retrievd in Ascending Order");
+			res.setData(books);
+			return res;
+		}
+		else
+			throw new NoRecordAvailableException("No record available in Database");
+	}
+	
+	//PAGINATION AND SORTING TOGETHER
+	public ResponseStructure<Page<Book>> getBookByPaginationAndSorting(int pageName, int pageSize, String fieldName){
+		ResponseStructure<Page<Book>> res=new ResponseStructure<>();
+		Page<Book> pages=bookRepository.findAll(PageRequest.of(pageName, pageSize, Sort.by(fieldName).descending()));
+		if(!pages.isEmpty()) {
+			res.setStatusCode(HttpStatus.OK.value());
+			res.setMessage("Book Record Retrieved in pages and in Sorted Manner");
+			res.setData(pages);
+			return res;
+		}
+		else
+			throw new NoRecordAvailableException("No Record Available in DB. ");
+	}
+	
 }

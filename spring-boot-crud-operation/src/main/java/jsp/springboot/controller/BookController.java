@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -110,5 +111,23 @@ public class BookController {
 	@GetMapping("/genre/{genre}")
 	public ResponseEntity<ResponseStructure<List<Book>>> getBookByGenre(@PathVariable String genre){
 			return new ResponseEntity<ResponseStructure<List<Book>>>(bookService.getBookByGenre(genre), HttpStatus.FOUND);
+	}
+	
+	//PAGINATION
+	@GetMapping("/page/{pageNumber}/{pageSize}")
+	public ResponseEntity<ResponseStructure<Page<Book>>> getBookByPagination(@PathVariable int pageNumber, @PathVariable int pageSize){
+		return new ResponseEntity<ResponseStructure<Page<Book>>>(bookService.getBookByPagination(pageNumber, pageSize), HttpStatus.OK);
+	}
+	
+	//SORTING
+	@GetMapping("/sort/{fieldName}")
+	public ResponseEntity<ResponseStructure<List<Book>>> getBookBySorting(@PathVariable String fieldName){
+		return new ResponseEntity<ResponseStructure<List<Book>>>(bookService.getBookBySorting(fieldName), HttpStatus.OK);
+	}
+	
+	//PAGINATION AND SORTING
+	@GetMapping("/{pageNumber}/{pageSize}/{fieldName}")
+	public ResponseEntity<ResponseStructure<Page<Book>>> getBookByPaginationAndSorting(@PathVariable int pageNumber,@PathVariable int pageSize,@PathVariable String fieldName){
+		return new ResponseEntity<ResponseStructure<Page<Book>>>(bookService.getBookByPaginationAndSorting(pageNumber, pageSize, fieldName), HttpStatus.OK);
 	}
 }
